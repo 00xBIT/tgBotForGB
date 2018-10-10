@@ -33,6 +33,15 @@ def handle_sticker(message):
     except Exception as e:
         print(e)
 
+    bot.reply_to(message, "это стикер")
+    
+    # Check folder for download
+    try:
+        if not os.path.exists(STICKER_PATH):
+            os.makedirs(STICKER_PATH)
+    except Exception as e:
+        print(e)
+
     #Save stiker to localdisk
     try:
         file_info = bot.get_file(message.sticker.file_id)
@@ -49,6 +58,15 @@ def handle_sticker(message):
         #Send file
         bot.send_document(message.chat.id, open(src, 'rb'))
         print("stiker sent")
+
+
+        #Convert webp to png
+        im = Image.open(src).convert("RGB")
+        im.save("test.png", "png")
+        print("webp to png - success")
+
+        bot.send_document(message.chat.id, open("test.png", 'rb'))
+        print("png sent")
     except Exception as e:
         print(e)
 
